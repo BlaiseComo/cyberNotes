@@ -1,0 +1,28 @@
+- All info on the internet is transmitted through packets
+    - These packets have a source MAC adress and IP adress along with a destination MAC adress and IP adress
+- The MAC (media access control) adress represents the machine
+- The IP adress represents where a packet came from
+- An NIC is a network interface card, also could be known as a wireless adapter
+    - Each NIC card has a unique MAC adress
+- MAC adresses are normally 48 bit numbers written in hexadecimal. Example: 08:00:27:3b:8f:ed
+- An IPv4 adress encodes the network hiearchy info in a 32 bit number. Example: 192.168.3.1
+    - Each section in an IP adress represents an 8 bit binary number
+- sudo -i allows you to become root user
+- sudo netdiscover picks up the IP addresses of the other machines on the network
+- Use ctrl-c to end a netdiscover scan and interupt any other processes that may need to end
+- To enable IP forwarding in terminal, run: echo 1 > /proc/sys/net/ipv4/ip_forward
+- With IP forwarding enabled, you need to trick the victim into believing your the router
+    - Issue fake ARP replies stating that your systems MAC address maps to the router's IP adress. 
+    - The victim machine will then update it's ARP table to have the router's IP address map to your MAC address
+- Run: arpspoof -i eth0 -t <VICTIM_IP> <ROUTER_IP>   to generate multiple fake ARP replies 
+    - The -t flag specifies a target 
+    - The -i flag represents the interface
+    - The first part of one line of the output is the MAC address of the Kali Linux machine
+        - The second part is the MAC address of the machine (victim) that will recieve the packet
+        - The third part is a type field indicating that an ARP packet is contained within the Ethernet frame being transmitted
+        - The fourth part represents the number of bytes associated with the ethernet frame
+        - The rest is a summary of the ARP reply that falsely states that the router's IP address is associeted with the Kali Linux machines MAC address
+- Run: arpspoof -i eth0 -t <ROUTER_IP> <VICTIM_IP>  to trick the router into believing you're the victim so you can intercept incoming internet traffic that should be going to the victim
+    - Run: urlsnarf -i eth0   to extract URL's from the victim machine on network eth0
+- Using ctrl-c to close arpspoof commands will ensure that they close properly (they will correct the arp tables)
+- Scapy python library allows us to intercept and parse the packets that pass through our NIC 
